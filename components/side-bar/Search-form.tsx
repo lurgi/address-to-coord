@@ -16,8 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import axios from "axios";
-import { Address } from "../Side-bar";
-import { Dispatch, SetStateAction } from "react";
+import addressesStore from "@/lib/store/Search-store";
 
 const formSchema = z.object({
   address: z.string().min(2, {
@@ -25,11 +24,7 @@ const formSchema = z.object({
   }),
 });
 
-const SearchForm = ({
-  setAddresses,
-}: {
-  setAddresses: Dispatch<SetStateAction<Address[] | undefined>>;
-}) => {
+const SearchForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,9 +32,13 @@ const SearchForm = ({
     },
   });
 
+  const { setAddresses, setIsLoading } = addressesStore((state) => state);
+
   const onSubmit = async ({ address }: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     const response = await axios.post("/api/address-to-coord", { address });
     setAddresses(response.data);
+    setIsLoading(false);
   };
   return (
     <Card>
