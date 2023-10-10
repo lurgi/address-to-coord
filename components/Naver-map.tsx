@@ -1,10 +1,9 @@
 "use client";
 
 import currentPlaceStore from "@/lib/store/Cur-place-store";
+import { drawNaverMap, drawWindowContents, importNaver } from "@/lib/utils";
 import { useEffect } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-
-const url = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_API_CLIENT_ID}`;
 
 const NaverMap = () => {
   const { currentPlace, isLoading, setIsLoading } = currentPlaceStore(
@@ -12,20 +11,15 @@ const NaverMap = () => {
   );
   useEffect(() => {
     setIsLoading(true);
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = url;
-    document.head.appendChild(script);
 
+    const script = importNaver();
     script.onload = () => {
-      const map = new naver.maps.Map("map", {
-        center: new naver.maps.LatLng(
-          currentPlace ? +currentPlace.y : 37.5666102,
-          currentPlace ? +currentPlace.x : 126.9783881
-        ),
-        zoom: 16,
-      });
+      const map = drawNaverMap(currentPlace);
+      if (currentPlace) {
+        drawWindowContents(map, currentPlace);
+      }
     };
+
     setIsLoading(false);
   }, [currentPlace, setIsLoading]);
   return (
