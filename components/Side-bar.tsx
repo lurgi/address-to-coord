@@ -3,7 +3,7 @@ import SearchForm from "./side-bar/Search-form";
 
 const SideBar = () => {
   return (
-    <div className="w-1/3 p-8">
+    <div className="min-w-[380px] w-1/3 p-8">
       <SearchForm />
       <SearchResults />
     </div>

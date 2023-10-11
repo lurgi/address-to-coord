@@ -23,7 +23,7 @@ const NaverMap = () => {
     setIsLoading(false);
   }, [currentPlace, setIsLoading]);
   return (
-    <div id="map" className="w-2/3 h-screen">
+    <div id="map" className="flex-1 h-screen">
       {isLoading || (
         <div className="flex justify-center items-center h-full">
           <AiOutlineLoading3Quarters className="w-20 h-20 animate-spin" />
